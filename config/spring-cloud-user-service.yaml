@@ -1,0 +1,37 @@
+mode:
+  type: Standalone
+  repository:
+    type: JDBC
+    props:
+      path: demo
+dataSources:
+  ds_0:
+    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    jdbcUrl: jdbc:mysql://localhost:3306/test?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+    maxPoolSize: 10
+  ds_1:
+    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    jdbcUrl: jdbc:mysql://localhost:3306/test?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+    maxPoolSize: 10
+rules:
+  - #!SINGLE
+    tables:
+      - "*.*"
+  - #!READWRITE_SPLITTING
+    dataSources:
+      readwrite_ds:
+        writeDataSourceName: ds_0
+        readDataSourceNames:
+          - ds_1
+        loadBalancerName: random
+    loadBalancers:
+      random:
+        type: RANDOM
+props:
+  sql-show: false

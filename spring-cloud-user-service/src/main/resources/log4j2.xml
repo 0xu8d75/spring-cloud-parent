@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <Properties>
+        <property name="FILE_PATH" value="/var/log/@artifactId@"/>
+        <property name="LOG_PATTERN"
+                  value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %X{userId} %X{uri} %logger{36} - %msg%n"/>
+        <property name="FILE_WRITE_INTERVAL" value="1"/>
+        <property name="LOG_MAX_HISTORY" value="30d"/>
+    </Properties>
+
+    <appenders>
+        <console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <ThresholdFilter level="trace" onMatch="ACCEPT" onMismatch="DENY"/>
+        </console>
+        <RollingRandomAccessFile name="RollingFileDebug" fileName="${FILE_PATH}/debug.log"
+                                 filePattern="${FILE_PATH}/debug.%d{yyyy-MM-dd}.log">
+            <ThresholdFilter level="error" onMatch="DENY" onMismatch="ACCEPT"/>
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="${FILE_WRITE_INTERVAL}"/>
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${FILE_PATH}" maxDepth="1">
+                    <IfFileName glob="debug.*.log"/>
+                    <IfLastModified age="${LOG_MAX_HISTORY}"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="RollingFileError" fileName="${FILE_PATH}/error.log"
+                                 filePattern="${FILE_PATH}/error.%d{yyyy-MM-dd}.log">
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="${FILE_WRITE_INTERVAL}"/>
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${FILE_PATH}" maxDepth="1">
+                    <IfFileName glob="error.*.log"/>
+                    <IfLastModified age="${LOG_MAX_HISTORY}"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+    </appenders>
+    <loggers>
+        <logger name="org.springframework" level="info"/>
+        <logger name="_org.springframework" level="info"/>
+        <logger name="org.apache" level="info"/>
+        <logger name="org.hibernate" level="info"/>
+        <logger name="com.alibaba" level="info"/>
+        <logger name="com.zaxxer" level="info"/>
+        <logger name="io.netty" level="info"/>
+        <logger name="org.mybatis" level="info"/>
+        <logger name="springfox.documentation" level="info"/>
+        <logger name="io.swagger" level="info"/>
+        <asyncRoot level="debug">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFileDebug"/>
+            <AppenderRef ref="RollingFileError"/>
+        </asyncRoot>
+    </loggers>
+
+</configuration>

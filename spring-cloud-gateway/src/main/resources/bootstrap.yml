@@ -1,0 +1,20 @@
+server:
+  port: 29080
+spring:
+  application:
+    name: ${artifactId}
+  profiles:
+    active: ${env}
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    nacos:
+      config:
+        file-extension: yaml
+        namespace: ${env}
+        server-addr: ${nacos.address}
+        shared-dataids: spring-cloud-global
+        refreshable-dataids: spring-cloud-global
+      discovery:
+        namespace: ${env}
+        server-addr: ${nacos.address}

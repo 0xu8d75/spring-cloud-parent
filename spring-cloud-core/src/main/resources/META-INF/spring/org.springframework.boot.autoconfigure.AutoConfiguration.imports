@@ -1,0 +1,2 @@
+com.u8d75.core.config.WebMvcConfiguration
+com.u8d75.core.config.FeignConfiguration

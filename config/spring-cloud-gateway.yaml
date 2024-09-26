@@ -1,0 +1,23 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - filters:
+            - RewritePath=/v3/api-docs/(?<segment>.*), /${segment}/v3/api-docs
+          id: openapi
+          predicates:
+            - Path=/v3/api-docs/**
+          uri: http://localhost:${server.port}
+        - filters:
+            - RewritePath=/spring-cloud-user-service/(?<segment>.*), /${segment}
+          id: spring-cloud-user-service
+          predicates:
+            - Path=/spring-cloud-user-service/**
+          uri: lb://spring-cloud-user-service
+        - filters:
+            - RewritePath=/spring-cloud-order-service/(?<segment>.*), /${segment}
+          id: spring-cloud-order-service
+          predicates:
+            - Path=/spring-cloud-order-service/**
+          uri: lb://spring-cloud-order-service
+unauthurls: /v3/api-docs/*,/*/v3/api-docs,/spring-cloud-user-service/**,/spring-cloud-order-service/**,

@@ -1,0 +1,44 @@
+server:
+  port: 29081
+  forward-headers-strategy: framework
+  error:
+    whitelabel:
+      enabled: false
+spring:
+  datasource:
+    driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
+    url: jdbc:shardingsphere:nacos:${spring.application.name}.yaml
+  httpclient:
+    enabled: true
+  cloud:
+    nacos:
+      config:
+        file-extension: yaml
+        namespace: ${env}
+        server-addr: ${nacos.address}
+        shared-dataids: spring-cloud-global
+        refreshable-dataids: spring-cloud-global
+      discovery:
+        namespace: ${env}
+        server-addr: ${nacos.address}
+  profiles:
+    active: ${env}
+  mvc:
+    servlet:
+      load-on-startup: 1
+    throw-exception-if-no-handler-found: true
+  application:
+    name: ${artifactId}
+  main:
+    allow-bean-definition-overriding: true
+feign:
+  okhttp:
+    enabled: true
+mybatis:
+  mapper-locations: classpath*:mappers/**/*.xml
+  config-location: classpath:mybatis.xml
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
